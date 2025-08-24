@@ -1,0 +1,28 @@
+SELECT ?person ?personLabel ?personDescription 
+       ?birthDate ?deathDate ?occupationLabel ?citizenshipLabel WHERE {
+
+  VALUES ?searchName {
+"סלוצקי דוצ"@he "סלוצקי דוצ"@yi
+"Беймель Iосифъ"@ru
+
+  }
+
+  {
+    ?person rdfs:label ?searchName .
+  }
+  UNION
+  {
+    ?person skos:altLabel ?searchName .
+  }
+
+  ?person wdt:P31 wd:Q5 .
+  
+  OPTIONAL { ?person wdt:P569 ?birthDate . }
+  OPTIONAL { ?person wdt:P570 ?deathDate . }
+  OPTIONAL { ?person wdt:P106 ?occupation . }
+  OPTIONAL { ?person wdt:P27 ?citizenship . }
+  
+  FILTER(!BOUND(?birthDate) || (YEAR(?birthDate) >= 1860 && YEAR(?birthDate) <= 1925))
+
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "he,ru,yi,en,lt" . }
+}
